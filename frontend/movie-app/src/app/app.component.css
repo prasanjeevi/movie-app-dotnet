@@ -1,0 +1,5 @@
+.navbar-brand { color: orangered !important}
+.btn { border-color:#ced4da !important}
+.input-group { margin: 10px 0px}
+.dropdown-menu .active { background: #ced4da; color: black; border-left: 2px solid orangered }
+nav .active { border-bottom: 2px solid orangered }

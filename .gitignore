@@ -261,3 +261,5 @@ __pycache__/
 *.pyc
 frontend/movie-app/package-lock.json
 server/Properties/launchSettings.json
+frontend/.DS_Store
+.DS_Store
