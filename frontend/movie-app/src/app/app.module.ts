@@ -6,13 +6,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MoviesComponent } from './movies/movies.component';
 import { SearchComponent } from './search/search.component';
+import { CapitalizePipe } from './capitalize.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     MoviesComponent,
-    SearchComponent
+    SearchComponent,
+    CapitalizePipe
   ],
   imports: [
     BrowserModule,

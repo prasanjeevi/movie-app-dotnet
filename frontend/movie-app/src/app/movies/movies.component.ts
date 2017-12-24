@@ -8,10 +8,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MoviesComponent implements OnInit {
 
-  section: string;
+  sectionTitle: string;
 
   constructor(private route: ActivatedRoute) { 
-    this.section = route.snapshot.url.pop().path;
+    this.sectionTitle = route.snapshot.url.pop().path;
   }
 
   ngOnInit() {
