@@ -7,6 +7,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MoviesComponent } from './movies/movies.component';
 import { SearchComponent } from './search/search.component';
 import { CapitalizePipe } from './capitalize.pipe';
+import { HttpClientModule }    from '@angular/common/http';
+import { MovieService } from 'app/movie.service';
 
 @NgModule({
   declarations: [
@@ -18,9 +20,10 @@ import { CapitalizePipe } from './capitalize.pipe';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [MovieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
