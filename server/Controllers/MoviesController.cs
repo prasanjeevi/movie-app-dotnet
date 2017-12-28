@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
@@ -17,8 +15,7 @@ namespace server.Controllers
     {
         private readonly AppSettings appSettings;
         private readonly ApplicationDbContext dbContext;
-        private List<Movie> movies = new List<Movie>();
-
+       
         public MoviesController(IOptions<AppSettings> appSettings, ApplicationDbContext dbContext)
         {
             this.appSettings = appSettings.Value;
@@ -32,6 +29,7 @@ namespace server.Controllers
             var client = new HttpClient();
             var request = client.GetStringAsync($"https://api.themoviedb.org/3/movie/popular?api_key={appSettings.ApiKey}&language=en-US&page=1");
             var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
+            ApplyRecommendation(response.Movies);
             return response.Movies;
         }
 
@@ -42,6 +40,7 @@ namespace server.Controllers
             var client = new HttpClient();
             var request = client.GetStringAsync($"https://api.themoviedb.org/3/movie/upcoming?api_key={appSettings.ApiKey}&language=en-US&page=1");
             var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
+            ApplyRecommendation(response.Movies);
             return response.Movies;
         }
 
@@ -52,6 +51,7 @@ namespace server.Controllers
             var client = new HttpClient();
             var request = client.GetStringAsync($"https://api.themoviedb.org/3/search/movie?api_key={appSettings.ApiKey}&language=en-US&page=1&include_adult=false&query={query}");
             var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
+            ApplyRecommendation(response.Movies);
             return response.Movies;
         }
 
@@ -59,7 +59,8 @@ namespace server.Controllers
         [Route("recommended")]
         public IEnumerable<Movie> GetRecommendedMovies()
         {
-            return movies;
+            dbContext.Movies.ToList().ForEach(m => m.IsRecommended = true);
+            return dbContext.Movies;
         }
 
         // POST api/movies/recommend
@@ -67,18 +68,32 @@ namespace server.Controllers
         [HttpPost]
         public void RecommendMovie([FromBody]Movie movie)
         {
-            movies.Add(movie);
-            //dbContext.Movies.Add(movie);
-            //dbContext.SaveChanges();
+            dbContext.Movies.Add(movie);
+            dbContext.SaveChanges();
         }
-
+    
         // DELETE api/movies/unrecommend/7
-        [Route("unrecommend")]
-        [HttpDelete("{id}")]
+        [Route("unrecommend/{id}")]
+        [HttpDelete]
         public void UnrecommendMovie(int id)
         {
-            var _movie = movies.FirstOrDefault(m => m.Id == id);
-            movies.Remove(_movie);
+            var _movie = dbContext.Movies.FirstOrDefault(m => m.Id == id);
+            dbContext.Movies.Remove(_movie);
+            dbContext.SaveChanges();
+        }
+
+        void ApplyRecommendation(IEnumerable<Movie> movies)
+        {
+            var recommended = from r in GetRecommendedMovies()
+                              join m in movies
+                              on r.Id equals m.Id
+                              select m;
+
+            foreach (var movie in recommended)
+            {
+                movie.IsRecommended = true;
+            }
+
         }
     }
 }

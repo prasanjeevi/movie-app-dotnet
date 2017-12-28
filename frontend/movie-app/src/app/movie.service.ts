@@ -2,13 +2,9 @@ import { Injectable } from '@angular/core';
 import { Movie } from './movie';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MovieApiResponse } from 'app/movie.api.response';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
 @Injectable()
 export class MovieService {
@@ -28,23 +24,40 @@ export class MovieService {
   }
 
   getTrendingMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>("http://localhost:5000/api/movies/trending");
+    return this.http.get<Movie[]>("http://localhost:5000/api/movies/trending").pipe(
+      tap(_ => console.log("retrived trending movies")),
+      catchError(this.handleError<Movie[]>('getTrendingMovies', []))
+    );
   }
 
   getUpcomingMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>("http://localhost:5000/api/movies/upcoming");
+    return this.http.get<Movie[]>("http://localhost:5000/api/movies/upcoming").pipe(
+      tap(_ => console.log("retrived upcoming movies")),
+      catchError(this.handleError<Movie[]>('getUpcomingMovies', []))
+    );
   }
 
   getRecommendedMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>("http://localhost:5000/api/movies/recommended");
+    return this.http.get<Movie[]>("http://localhost:5000/api/movies/recommended").pipe(
+      tap(_ => console.log("retirved recommended movies")),
+      catchError(this.handleError<Movie[]>('getRecommendedMovies', []))
+    );
   }
 
-  toggleRecommend(movie: Movie): void {
-    if (movie.isRecommended) {
-      this.http.post<Movie>("http://localhost:5000/api/movies/recommend", movie);
+  toggleRecommend(movie: Movie): Observable<any> {
+    if (!movie.recommended) {
+      movie.recommended = true;
+      return this.http.post("http://localhost:5000/api/movies/recommend", movie, {responseType:"text"}).pipe(
+        tap(_ => console.log("recommend successfuly")),
+        catchError(this.handleError<Movie>('toggleRecommend post'))
+      );
     }
     else {
-      this.http.delete(`http://localhost:5000/api/movies/unrecommend?id=${movie.id}`) 
+      movie.recommended = false;
+      return this.http.delete(`http://localhost:5000/api/movies/unrecommend/${movie.id}`, {responseType:"text"}).pipe(
+        tap(_ => console.log("unrecommend successfuly")),
+        catchError(this.handleError<Movie>('toggleRecommend del'))
+      );
     }
   }
   
@@ -67,10 +80,4 @@ export class MovieService {
       return of(result as T);
     };
   }
-
-  // searchMovies(term: String){
-  //   console.log(term);
-  //   // /this.http.get<Movie[]>(`https://api.themoviedb.org/3/search/movie?api_key=cae6efb829ee2ade77e8335f8b5f8c23&language=en-US&page=1&include_adult=false&query=${term}`)
-  //   this.http.get(`https://api.themoviedb.org/3/search/movie?api_key=cae6efb829ee2ade77e8335f8b5f8c23&language=en-US&page=1&include_adult=false&query=${term}`).subscribe(res => console.log(res));
-  // }
 }

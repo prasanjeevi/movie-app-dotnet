@@ -1,6 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { RouterTestingModule } from '@angular/router/testing';
 import { MoviesComponent } from './movies.component';
+import { CapitalizePipe } from 'app/capitalize.pipe';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { MovieService } from 'app/movie.service';
+import { ActivatedRoute } from '@angular/router';
+
+class MockUrl {
+  path: string = '';
+}
+
+class MockSnapshot {
+  url : MockUrl[]
+}
+class MockActivatedRoute {
+  snapshot : MockSnapshot = new MockSnapshot();
+}
 
 describe('MoviesComponent', () => {
   let component: MoviesComponent;
@@ -8,7 +23,19 @@ describe('MoviesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MoviesComponent ]
+      imports: [
+        RouterTestingModule
+      ],
+      declarations: [
+        CapitalizePipe,
+        MoviesComponent
+      ],
+      providers: [
+        { provide: ActivatedRoute, useClass: MockActivatedRoute },
+        HttpHandler,
+        HttpClient,
+        MovieService
+      ]
     })
     .compileComponents();
   }));

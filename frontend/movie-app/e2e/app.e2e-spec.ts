@@ -7,8 +7,8 @@ describe('movie-app App', () => {
     page = new MovieAppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display brand name', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!!');
+    expect(page.getParagraphText()).toEqual('Movie');
   });
 });

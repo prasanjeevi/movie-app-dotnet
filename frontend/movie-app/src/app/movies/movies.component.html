@@ -3,14 +3,11 @@
 <div class="row">
   <div class="col-md-3 col-sm-6" *ngFor="let movie of movies">
     <div class="card">
-      <!-- <img class="card-img-top" src="https://image.tmdb.org/t/p/w185_and_h278_bestv2{{movie.backdrop_path}}" alt="Jurassic Park"> -->
       <div class="card-body">
         <h4 class="card-title">{{movie.title}}</h4>
-        <!-- <span class="badge badge-secondary"><i class="fa fa-user"></i> Steven Spielberg</span> -->
         <p class="card-text">{{movie.overview}}</p>
-        <!-- Before opening day, he invites a team of experts and his two eager grandchildren to experience the park and help calm anxious investors. However, the park is anything but amusing as the security systems go off-line and the dinosaurs escape.-->
         <button class="btn btn-sm btn-outline-secondary" (click)="toggleRecommend(movie)">
-          <i class="fa fa-heart-o"></i> Recommend</button>
+          <i class="fa {{movie.recommended ? 'fa-trash-o' : 'fa-heart-o'}}"></i> {{movie.recommended ? "Unrecommend" : "Recommend"}}</button>
       </div>
     </div>
   </div>
