@@ -12,10 +12,4 @@
   <input class="form-control" type="search" placeholder="Search" #searchBox id="search-box" (keyup)="search(searchBox.value)">
 </div>
 
-<ul>
-  <li *ngFor="let movie of movies$ | async" >
-    <a routerLink="/detail/{{movie.id}}">
-      {{movie.id}}
-    </a>
-  </li>
-</ul>
+<app-movies *ngIf="searchBox.value" [movies]="movies$ | async"></app-movies>

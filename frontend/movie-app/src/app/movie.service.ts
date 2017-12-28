@@ -17,15 +17,35 @@ export class MovieService {
 
   
   searchMovies(term: string): Observable<Movie[]> {
-    let apiURL = `http://localhost:5000/api/movies`;
     if (!term.trim()) {
       // if not search term, return empty hero array.
       return of([]);
     } 
-    return this.http.get<Movie[]>(apiURL).pipe(
+    return this.http.get<Movie[]>(`http://localhost:5000/api/movies/search?query=${term}`).pipe(
       tap(_ => console.log(`found movies matching "${term}"`)),
       catchError(this.handleError<Movie[]>('searchMovies', []))
     );
+  }
+
+  getTrendingMovies(): Observable<Movie[]> {
+    return this.http.get<Movie[]>("http://localhost:5000/api/movies/trending");
+  }
+
+  getUpcomingMovies(): Observable<Movie[]> {
+    return this.http.get<Movie[]>("http://localhost:5000/api/movies/upcoming");
+  }
+
+  getRecommendedMovies(): Observable<Movie[]> {
+    return this.http.get<Movie[]>("http://localhost:5000/api/movies/recommended");
+  }
+
+  toggleRecommend(movie: Movie): void {
+    if (movie.isRecommended) {
+      this.http.post<Movie>("http://localhost:5000/api/movies/recommend", movie);
+    }
+    else {
+      this.http.delete(`http://localhost:5000/api/movies/unrecommend?id=${movie.id}`) 
+    }
   }
   
   /**

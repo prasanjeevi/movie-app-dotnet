@@ -3,16 +3,16 @@
         <a class="navbar-brand" href="#"><i class="fa fa-film" aria-hidden="true"></i> Movie</a>
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link active" routerLink="/dashboard">Home</a>
+                <a class="nav-link" [routerLinkActive]="['active']" routerLink="/dashboard">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" routerLink="/movies/trending">Trending</a>
+                <a class="nav-link" [routerLinkActive]="['active']" routerLink="/movies/trending">Trending</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" routerLink="/movies/upcoming">Upcoming</a>
+                <a class="nav-link" [routerLinkActive]="['active']" routerLink="/movies/upcoming">Upcoming</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" routerLink="/movies/recommended">Recommendations</a>
+                <a class="nav-link" [routerLinkActive]="['active']" routerLink="/movies/recommended">Recommendations</a>
             </li>
         </ul>
     </nav>

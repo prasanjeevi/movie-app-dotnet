@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json;
 using System.Net.Http; 
 using Microsoft.Extensions.Options;
+using server.Data;
 
 namespace server.Controllers
 {
@@ -15,10 +16,13 @@ namespace server.Controllers
     public class MoviesController : Controller
     {
         private readonly AppSettings appSettings;
+        private readonly ApplicationDbContext dbContext;
+        private List<Movie> movies = new List<Movie>();
 
-        public MoviesController(IOptions<AppSettings> appSettings)
+        public MoviesController(IOptions<AppSettings> appSettings, ApplicationDbContext dbContext)
         {
             this.appSettings = appSettings.Value;
+            this.dbContext = dbContext;
         }
 
         // GET api/movies/trending
@@ -51,22 +55,30 @@ namespace server.Controllers
             return response.Movies;
         }
 
-        // POST api/values
+        // GET api/movies/recommended
+        [Route("recommended")]
+        public IEnumerable<Movie> GetRecommendedMovies()
+        {
+            return movies;
+        }
+
+        // POST api/movies/recommend
+        [Route("recommend")]
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void RecommendMovie([FromBody]Movie movie)
         {
+            movies.Add(movie);
+            //dbContext.Movies.Add(movie);
+            //dbContext.SaveChanges();
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
+        // DELETE api/movies/unrecommend/7
+        [Route("unrecommend")]
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void UnrecommendMovie(int id)
         {
+            var _movie = movies.FirstOrDefault(m => m.Id == id);
+            movies.Remove(_movie);
         }
     }
 }
