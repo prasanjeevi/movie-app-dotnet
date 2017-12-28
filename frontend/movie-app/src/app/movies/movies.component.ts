@@ -12,27 +12,25 @@ export class MoviesComponent implements OnInit {
 
   @Input() movies: Movie[];
 
-  sectionTitle: string = '';
+  sectionTitle = '';
 
-  constructor(private route: ActivatedRoute, private movieService: MovieService) { 
+  constructor(private route: ActivatedRoute, private movieService: MovieService) {
 
-    if(route.snapshot.url) {
+    if (route.snapshot.url) {
       this.sectionTitle = route.snapshot.url.pop().path;
     }
-    
-    if(this.sectionTitle === 'trending') {
+
+    if (this.sectionTitle === 'trending') {
       this.movieService.getTrendingMovies().subscribe(
         movie => {
           this.movies = movie as Movie[]
         });
-    }
-    else if(this.sectionTitle === 'upcoming') {
+    } else if (this.sectionTitle === 'upcoming') {
       this.movieService.getUpcomingMovies().subscribe(
         movie => {
           this.movies = movie as Movie[]
         });
-    }
-    else if(this.sectionTitle === 'recommended') {
+    } else if (this.sectionTitle === 'recommended') {
       this.movieService.getRecommendedMovies().subscribe(
         movie => {
           this.movies = movie as Movie[]
@@ -44,8 +42,8 @@ export class MoviesComponent implements OnInit {
   }
 
   toggleRecommend(movie: Movie): void {
-    if(this.sectionTitle === 'recommended') {
-      this.movies = this.movies.filter(m => m!==movie);
+    if (this.sectionTitle === 'recommended') {
+      this.movies = this.movies.filter(m => m !== movie);
     }
     this.movieService.toggleRecommend(movie).subscribe();
   }

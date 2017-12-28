@@ -17,7 +17,7 @@ describe('SearchComponent', () => {
         MoviesComponent,
         SearchComponent
       ],
-      providers:[
+      providers: [
         HttpHandler,
         HttpClient,
         MovieService

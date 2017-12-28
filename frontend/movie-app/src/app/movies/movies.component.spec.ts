@@ -7,14 +7,14 @@ import { MovieService } from 'app/movie.service';
 import { ActivatedRoute } from '@angular/router';
 
 class MockUrl {
-  path: string = '';
+  path = '';
 }
 
 class MockSnapshot {
-  url : MockUrl[]
+  url: MockUrl[]
 }
 class MockActivatedRoute {
-  snapshot : MockSnapshot = new MockSnapshot();
+  snapshot: MockSnapshot = new MockSnapshot();
 }
 
 describe('MoviesComponent', () => {

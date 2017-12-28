@@ -5,7 +5,7 @@ export class Movie {
     backdrop_path: string;
     recommended: boolean;
 
-    constructor(id: number, title: string, overview: string, backdrop_path: string, recommended: boolean){
+    constructor(id: number, title: string, overview: string, backdrop_path: string, recommended: boolean) {
         this.id = id;
         this.title = title;
         this.overview = overview;

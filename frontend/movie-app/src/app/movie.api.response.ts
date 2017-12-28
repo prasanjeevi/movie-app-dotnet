@@ -1,4 +1,4 @@
-import { Movie } from "app/movie";
+import { Movie } from 'app/movie';
 
 export interface MovieApiResponse {
     page: number;

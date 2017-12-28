@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CapitalizePipe implements PipeTransform {
 
-  transform(value:any, words:boolean) {
+  transform(value: any, words: boolean) {
 
     if (value) {
       if (words) {
