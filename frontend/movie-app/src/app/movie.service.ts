@@ -11,15 +11,22 @@ export class MovieService {
 
   constructor(private http: HttpClient) {}
 
-  searchMovies(term: string): Observable<Movie[]> {
+  searchMovies(term: string, searchBy: string): Observable<Movie[]> {
     if (!term.trim()) {
-      // if not search term, return empty hero array.
       return of([]);
     }
-    return this.http.get<Movie[]>(`http://localhost:5000/api/movies/search?query=${term}`).pipe(
-      tap(_ => console.log(`found movies matching "${term}"`)),
-      catchError(this.handleError<Movie[]>('searchMovies', []))
-    );
+
+    if (searchBy === 'Movie') {
+      return this.http.get<Movie[]>(`http://localhost:5000/api/movies/search?query=${term}`).pipe(
+        tap(_ => console.log(`found movies matching "${term}"`)),
+        catchError(this.handleError<Movie[]>('searchMovies', []))
+      );
+    } else if (searchBy === 'Director') {
+      return this.http.get<Movie[]>(`http://localhost:5000/api/movies/search/director/?query=${term}`).pipe(
+        tap(_ => console.log(`found movies matching "${term}"`)),
+        catchError(this.handleError<Movie[]>('searchMoviesByDirector', []))
+      );
+    }
   }
 
   getTrendingMovies(): Observable<Movie[]> {

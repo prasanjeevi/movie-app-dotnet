@@ -19,6 +19,7 @@ import { MovieApiResponse } from 'app/movie.api.response';
 export class SearchComponent implements OnInit {
 
   movies$: Observable<Movie[]>;
+  searchBy = 'Movie';
   private searchTerms = new Subject<string>();
 
   constructor(private movieService: MovieService) {}
@@ -26,7 +27,6 @@ export class SearchComponent implements OnInit {
   // Push a search term into the observable stream.
   search(term: string): void {
     this.searchTerms.next(term);
-    // this.movieService.searchMovies(term);
   }
 
   ngOnInit(): void {
@@ -38,7 +38,7 @@ export class SearchComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.movieService.searchMovies(term)),
+      switchMap((term: string) => this.movieService.searchMovies(term, this.searchBy)),
     );
   }
 

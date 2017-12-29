@@ -16,6 +16,9 @@ public partial class Movie
     [JsonProperty("backdrop_path")]
     public string BackdropPath { get; set; }
 
+    [JsonProperty("vote_average")]
+    public double VoteAverage { get; set; }
+
     [NotMapped]
     [JsonProperty("recommended")]
     public bool IsRecommended { get; set; }
