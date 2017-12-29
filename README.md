@@ -57,3 +57,10 @@ You need to signup to [TMDB] (https://www.themoviedb.org/account/signup).
 - After login, click into your account settings [screenshot](https://www.themoviedb.org/assets/static_cache/da34d170e2ffdb3db4a317314e64b186/images/api-create-1.png)
 - Click the API menu item on the left [screenshot](https://www.themoviedb.org/assets/static_cache/41b35724525a13c05bb1d63fe7af7621/images/api-create-2.png)
 - Click "Create" from the API page [screenshot](https://www.themoviedb.org/assets/static_cache/af031c5c6f6787caa956d374c1c3ce9b/images/api-create-3.png)
+
+# Screenshots
+<img src="https://gitlab-cts.stackroute.in/Sanjeevi.Mohan/movie-app-dotnet/raw/master/docs/screenshots/home.PNG">
+<img src="https://gitlab-cts.stackroute.in/Sanjeevi.Mohan/movie-app-dotnet/raw/master/docs/screenshots/search.PNG">
+<img src="https://gitlab-cts.stackroute.in/Sanjeevi.Mohan/movie-app-dotnet/raw/master/docs/screenshots/search-by-director.PNG">
+<img src="https://gitlab-cts.stackroute.in/Sanjeevi.Mohan/movie-app-dotnet/raw/master/docs/screenshots/recommends.PNG">
+
