@@ -12,6 +12,7 @@ export class MoviesComponent implements OnInit {
 
   @Input() movies: Movie[];
   @Input() section: string;
+  i = 0;
 
   constructor(private route: ActivatedRoute, private movieService: MovieService) {
 
@@ -53,5 +54,21 @@ export class MoviesComponent implements OnInit {
     } else {
       return this.section + ' Movies';
     }
+  }
+
+  prev(): void {
+    if (this.i > 0) {
+      this.i = this.i - 1;
+    }
+  }
+
+  next(): void {
+    if (this.movies && this.i < this.movies.length - 6) {
+      this.i = this.i + 1;
+    }
+  }
+
+  hasMore(): boolean {
+    return this.movies && (this.i === this.movies.length - 6 || this.movies.length < 6);
   }
 }

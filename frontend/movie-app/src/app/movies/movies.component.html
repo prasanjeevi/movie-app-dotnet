@@ -5,18 +5,25 @@
   <div class="card-body">
     <p *ngIf="!movies">Loading...</p>
     <div class="row">
-      <div class="col-md-3 col-sm-6" *ngFor="let movie of movies">
+      <div class="prev"> 
+        <button class="btn" [disabled]="i==0" (click)="prev()"><i class="fa fa-chevron-circle-left fa-2x"></i></button>
+      </div>
+      <div class="col-md-2 col-sm-6" *ngFor="let movie of movies | slice:i:i+6">
         <div class="card movie-card">
-            <img *ngIf="movie.backdrop_path" class="card-img-top movie-poster" src="https://image.tmdb.org/t/p/w185{{movie.backdrop_path}}" alt="No preview">
+          <img *ngIf="movie.backdrop_path" class="card-img-top movie-poster" src="https://image.tmdb.org/t/p/w185{{movie.backdrop_path}}" alt="No preview">
+          <img *ngIf="!movie.backdrop_path" class="card-img-top movie-poster" src="assets/default.png" alt="Default">
           <div class="card-body">
             <h4 class="card-title movie-title">{{movie.title}}</h4>
             <p class="card-text movie-description">{{movie.overview}}</p>
-            <p class="badge bagde-secondary movie-rating">Rating: {{movie.vote_average}} / 10</p>
+            <p class="badge bagde-secondary movie-rating">{{movie.vote_average}} <i class="fa fa-star"></i> </p>
             <button class="btn btn-sm btn-outline-secondary" (click)="toggleRecommend(movie)">
               <i class="fa {{movie.recommended ? 'unrecommend fa-trash-o' : 'recommend fa-heart-o'}}"></i> {{movie.recommended ? "Unrecommend" : "Recommend"}}
             </button>
           </div>
         </div>
+      </div>
+      <div class="next">
+          <button class="btn" [disabled]="hasMore()" (click)="next()"><i class="fa fa-chevron-circle-right fa-2x"></i></button>
       </div>
     </div>
   </div>

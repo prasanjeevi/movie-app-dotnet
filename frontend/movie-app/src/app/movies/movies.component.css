@@ -1,1 +1,46 @@
-.card { margin: 10px 0px; }
+h3 { font-size: 1.2rem; }
+.btn {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+.card {
+    margin-bottom: 10px;
+}
+.card-body { min-height: 200px; }
+.movie-card { margin: 10px 0px; }
+.movie-title { font-size: 1rem; }
+.movie-description {
+    display: block; /* Fallback for non-webkit */
+    display: -webkit-box;
+    max-width: 400px;
+    height: 12px * 1.4 * 5; /* Fallback for non-webkit */
+    margin: 0 auto;
+    font-size: 12px;
+    line-height: 1.4;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 5px;
+  }
+.movie-rating {
+    position: absolute;
+    bottom: 5px;
+    left: 15px;
+}
+.prev .btn, .next .btn {
+    color: darkorange;
+    background-color: transparent;
+    padding: 0px;
+    border: none;
+}
+.prev, .next {
+    position: absolute;
+    z-index: 1;
+    top: 260px;
+    width: 40px;
+}
+.next {
+    right: 0px;
+}
