@@ -4,6 +4,7 @@
   </div>
   <div class="card-body">
     <p *ngIf="!movies">Loading...</p>
+    <p *ngIf="movies && movies.length==0">No movies found</p>
     <div class="row">
       <div class="prev"> 
         <button class="btn" [disabled]="i==0" (click)="prev()"><i class="fa fa-chevron-circle-left fa-2x"></i></button>

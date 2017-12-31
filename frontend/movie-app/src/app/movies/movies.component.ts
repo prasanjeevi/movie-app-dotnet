@@ -28,7 +28,12 @@ export class MoviesComponent implements OnInit {
           this.movies = movie as Movie[]
         });
     } else if (this.section === 'recommended') {
-      this.movieService.getRecommendedMovies(this.selectedMovieId).subscribe(
+      this.movieService.getRecommendedMovies().subscribe(
+        movie => {
+          this.movies = movie as Movie[]
+      });
+    } else if (this.section === 'recommendations') {
+      this.movieService.getRecommendationsMovies(this.selectedMovieId).subscribe(
         movie => {
           this.movies = movie as Movie[]
       });

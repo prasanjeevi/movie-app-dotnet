@@ -43,9 +43,16 @@ export class MovieService {
     );
   }
 
-  getRecommendedMovies(selectedMovieId: number): Observable<Movie[]> {
-    return this.http.get<Movie[]>(`http://localhost:5000/api/movies/recommended/${selectedMovieId}`).pipe(
-      tap(_ => console.log('retirved recommended movies')),
+  getRecommendedMovies(): Observable<Movie[]> {
+    return this.http.get<Movie[]>(`http://localhost:5000/api/movies/recommended`).pipe(
+      tap(_ => console.log('retrived my recommended movies')),
+      catchError(this.handleError<Movie[]>('getRecommendedMovies', []))
+    );
+  }
+
+  getRecommendationsMovies(selectedMovieId: number): Observable<Movie[]> {
+    return this.http.get<Movie[]>(`http://localhost:5000/api/movies/recommendations/${selectedMovieId}`).pipe(
+      tap(_ => console.log('retrived recommendations movies')),
       catchError(this.handleError<Movie[]>('getRecommendedMovies', []))
     );
   }

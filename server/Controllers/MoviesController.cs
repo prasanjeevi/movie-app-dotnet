@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Net.Http; 
 using Microsoft.Extensions.Options;
 using server.Data;
+using server.Models;
 
 namespace server.Controllers
 {
@@ -72,8 +73,8 @@ namespace server.Controllers
             return movies;
         }
 
-        // GET api/movies/recommended/{id}
-        [Route("recommended/{id}")]
+        // GET api/movies/recommendations/{id}
+        [Route("recommendations/{id}")]
         public IEnumerable<Movie> GetRecommendedMovies(string id)
         {
             var client = new HttpClient();
@@ -81,6 +82,14 @@ namespace server.Controllers
             var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
             ApplyRecommendation(response.Movies);
             return response.Movies;
+        }
+        
+        // GET api/movies/recommended
+        [Route("recommended")]
+        public IEnumerable<Movie> GetSavedRecommendedMovies()
+        {
+            dbContext.Movies.ToList().ForEach(m => m.IsRecommended = true);
+            return dbContext.Movies;
         }
 
         // POST api/movies/recommend
@@ -91,7 +100,7 @@ namespace server.Controllers
             dbContext.Movies.Add(movie);
             dbContext.SaveChanges();
         }
-    
+
         // DELETE api/movies/unrecommend/7
         [Route("unrecommend/{id}")]
         [HttpDelete]
@@ -114,12 +123,6 @@ namespace server.Controllers
                 movie.IsRecommended = true;
             }
 
-        }
-
-        IEnumerable<Movie> GetSavedRecommendedMovies()
-        {
-            dbContext.Movies.ToList().ForEach(m => m.IsRecommended = true);
-            return dbContext.Movies;
         }
     }
 }
