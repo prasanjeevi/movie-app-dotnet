@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Movie } from 'app/movie';
 import { MovieService } from 'app/movie.service';
 
@@ -15,12 +14,7 @@ export class MoviesComponent implements OnInit {
   @Input() selectedMovieId: number;
   i = 0;
 
-  constructor(private route: ActivatedRoute, private movieService: MovieService) {
-
-    if (route.snapshot.url && route.snapshot.url.length > 0) {
-      this.section = route.snapshot.url.pop().path;
-    }
-  }
+  constructor(private movieService: MovieService) {}
 
   ngOnInit() {
     if (this.section === 'trending') {
