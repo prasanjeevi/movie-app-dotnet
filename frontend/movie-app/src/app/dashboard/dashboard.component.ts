@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
+  id: number;
   constructor() { }
 
   ngOnInit() {
   }
 
+  onSelected(id: number) {
+    console.log(id);
+    this.id = id;
+  }
 }

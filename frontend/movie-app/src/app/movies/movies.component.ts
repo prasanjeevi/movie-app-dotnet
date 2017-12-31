@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Movie } from 'app/movie';
 import { MovieService } from 'app/movie.service';
@@ -12,6 +12,7 @@ export class MoviesComponent implements OnInit {
 
   @Input() movies: Movie[];
   @Input() section: string;
+  @Output() notify = new EventEmitter<number>();
   i = 0;
 
   constructor(private route: ActivatedRoute, private movieService: MovieService) {
@@ -34,7 +35,7 @@ export class MoviesComponent implements OnInit {
           this.movies = movie as Movie[]
         });
     } else if (this.section === 'recommended') {
-      this.movieService.getRecommendedMovies().subscribe(
+      this.movieService.getRecommendedMovies(281957).subscribe(
         movie => {
           this.movies = movie as Movie[]
         });
@@ -70,5 +71,10 @@ export class MoviesComponent implements OnInit {
 
   hasMore(): boolean {
     return this.movies && (this.i === this.movies.length - 6 || this.movies.length < 6);
+  }
+
+  select(id: number) {
+    console.log(id);
+    this.notify.emit(id);
   }
 }

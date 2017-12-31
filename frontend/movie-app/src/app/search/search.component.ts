@@ -42,4 +42,10 @@ export class SearchComponent implements OnInit {
     );
   }
 
+  id: number;
+  onNotify(id: number) {
+    console.log(id);
+    this.id = id;
+  }
+
 }
