@@ -20,6 +20,7 @@ export class SearchComponent implements OnInit {
 
   movies$: Observable<Movie[]>;
   searchBy = 'Movie';
+  id: number;
   private searchTerms = new Subject<string>();
 
   constructor(private movieService: MovieService) {}
@@ -38,14 +39,12 @@ export class SearchComponent implements OnInit {
       distinctUntilChanged(),
 
       // switch to new search observable each time the term changes
-      switchMap((term: string) => this.movieService.searchMovies(term, this.searchBy)),
+      switchMap((term: string) => {
+        this.id = undefined;
+        const searchResults = this.movieService.searchMovies(term, this.searchBy);
+        searchResults.subscribe(m => { this.id = m[0].id });
+        return searchResults;
+      }),
     );
   }
-
-  id: number;
-  onNotify(id: number) {
-    console.log(id);
-    this.id = id;
-  }
-
 }
