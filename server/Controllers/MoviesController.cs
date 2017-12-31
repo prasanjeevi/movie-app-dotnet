@@ -7,6 +7,8 @@ using System.Net.Http;
 using Microsoft.Extensions.Options;
 using server.Data;
 using server.Models;
+using server.Repositories;
+using System;
 
 namespace server.Controllers
 {
@@ -15,105 +17,159 @@ namespace server.Controllers
     public class MoviesController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly ApplicationDbContext dbContext;
+        private readonly MoviesRepository repository;
        
         public MoviesController(IOptions<AppSettings> appSettings, ApplicationDbContext dbContext)
         {
             this.appSettings = appSettings.Value;
-            this.dbContext = dbContext;
+            repository = new MoviesRepository(dbContext);
         }
 
         // GET api/movies/trending
         [Route("trending")]
-        public IEnumerable<Movie> GetTrendingMovies()
+        public IActionResult GetTrendingMovies()
         {
-            var client = new HttpClient();
-            var request = client.GetStringAsync(appSettings.GetTrendingMoviesUrl);
-            var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
-            ApplyRecommendation(response.Movies);
-            return response.Movies;
+            try
+            {
+                var client = new HttpClient();
+                var request = client.GetStringAsync(appSettings.GetTrendingMoviesUrl);
+                var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
+                ApplyRecommendation(response.Movies);
+                return Ok(response.Movies);
+            }
+            catch(Exception ex)
+            {
+                return Ok(Util.SendErrorResponse("Unable to get trending movies", ex));
+            }
         }
 
         // GET api/movies/upcoming
         [Route("upcoming")]
-        public IEnumerable<Movie> GetUpcomingMovies()
+        public IActionResult GetUpcomingMovies()
         {
-            var client = new HttpClient();
-            var request = client.GetStringAsync(appSettings.GetUpcomingMoviesUrl);
-            var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
-            ApplyRecommendation(response.Movies);
-            return response.Movies;
+            try
+            {
+                var client = new HttpClient();
+                var request = client.GetStringAsync(appSettings.GetUpcomingMoviesUrl);
+                var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
+                ApplyRecommendation(response.Movies);
+                return Ok(response.Movies);
+            }
+            catch(Exception ex)
+            {
+                return Ok(Util.SendErrorResponse("Unable to get upcoming movies", ex));
+            }
         }
 
         // GET api/movies/search
         [Route("search")]
-        public IEnumerable<Movie> GetMovies(string query)
+        public IActionResult GetMovies(string query)
         {
-            var client = new HttpClient();
-            var request = client.GetStringAsync(appSettings.GetMoviesUrl + query);
-            var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
-            ApplyRecommendation(response.Movies);
-            return response.Movies;
+            try
+            {
+                var client = new HttpClient();
+                var request = client.GetStringAsync(appSettings.GetMoviesUrl + query);
+                var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
+                ApplyRecommendation(response.Movies);
+                return Ok(response.Movies);
+            }
+            catch(Exception ex)
+            {
+                return Ok(Util.SendErrorResponse("Unable to get upcoming movies", ex));
+            }
         }
 
         // GET api/movies/search
         [Route("search/director")]
-        public IEnumerable<Movie> GetMoviesByDirector(string query)
+        public IActionResult GetMoviesByDirector(string query)
         {
-            var client = new HttpClient();
-            var request = client.GetStringAsync(appSettings.GetMoviesByDirectorUrl + query);
-            var response = JsonConvert.DeserializeObject<PersonApiResponse>(request.Result);
-
-            List<Movie> movies = new List<Movie>();
-            foreach(var person in response.People)
+            try
             {
-                movies.AddRange(person.KnownFor);
+                var client = new HttpClient();
+                var request = client.GetStringAsync(appSettings.GetMoviesByDirectorUrl + query);
+                var response = JsonConvert.DeserializeObject<PersonApiResponse>(request.Result);
+
+                List<Movie> movies = new List<Movie>();
+                foreach (var person in response.People)
+                {
+                    movies.AddRange(person.KnownFor);
+                }
+                ApplyRecommendation(movies);
+                return Ok(movies);
             }
-            ApplyRecommendation(movies);
-            return movies;
+            catch(Exception ex)
+            {
+                return Ok(Util.SendErrorResponse("Unable to search movies", ex));
+            }
         }
 
         // GET api/movies/recommendations/{id}
         [Route("recommendations/{id}")]
-        public IEnumerable<Movie> GetRecommendedMovies(string id)
+        public IActionResult GetRecommendedMovies(string id)
         {
-            var client = new HttpClient();
-            var request = client.GetStringAsync(appSettings.GetRecommendedMoviesUrl.Replace("{id}", id));
-            var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
-            ApplyRecommendation(response.Movies);
-            return response.Movies;
+            try
+            {
+                var client = new HttpClient();
+                var request = client.GetStringAsync(appSettings.GetRecommendedMoviesUrl.Replace("{id}", id));
+                var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
+                ApplyRecommendation(response.Movies);
+                return Ok(response.Movies);
+            }
+            catch(Exception ex)
+            {
+                return Ok(Util.SendErrorResponse("Unable to get movie recommendations", ex));
+            }
         }
-        
+
         // GET api/movies/recommended
         [Route("recommended")]
-        public IEnumerable<Movie> GetSavedRecommendedMovies()
+        public IActionResult GetSavedRecommendedMovies()
         {
-            dbContext.Movies.ToList().ForEach(m => m.IsRecommended = true);
-            return dbContext.Movies;
+            try
+            {
+                return Ok(repository.GetMovies());
+            }
+            catch (Exception ex)
+            {
+                return Ok(Util.SendErrorResponse("Unable to get movie recommendations", ex));
+            }
         }
 
         // POST api/movies/recommend
         [Route("recommend")]
         [HttpPost]
-        public void RecommendMovie([FromBody]Movie movie)
+        public IActionResult RecommendMovie([FromBody]Movie movie)
         {
-            dbContext.Movies.Add(movie);
-            dbContext.SaveChanges();
+            try
+            {
+                repository.AddMovie(movie);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Ok(Util.SendErrorResponse("Unable to update movie recommendation", ex));
+            }
         }
 
         // DELETE api/movies/unrecommend/7
         [Route("unrecommend/{id}")]
         [HttpDelete]
-        public void UnrecommendMovie(int id)
+        public IActionResult UnrecommendMovie(int id)
         {
-            var _movie = dbContext.Movies.FirstOrDefault(m => m.Id == id);
-            dbContext.Movies.Remove(_movie);
-            dbContext.SaveChanges();
+            try
+            {
+                repository.DeleteMovie(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Ok(Util.SendErrorResponse("Unable to update movie recommendation", ex));
+            }
         }
 
         void ApplyRecommendation(IEnumerable<Movie> movies)
         {
-            var recommended = from r in GetSavedRecommendedMovies()
+            var recommended = from r in repository.GetMovies()
                               join m in movies
                               on r.Id equals m.Id
                               select m;
