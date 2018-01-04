@@ -10,7 +10,7 @@
         <button class="btn" [disabled]="i==0" (click)="prev()"><i class="fa fa-chevron-circle-left fa-2x"></i></button>
       </div>
       <div class="col-md-2 col-sm-6" *ngFor="let movie of movies | slice:i:i+6">
-        <div class="card movie-card" (click)="select(movie.id)">
+        <div class="card movie-card">
           <img *ngIf="movie.backdrop_path" class="card-img-top movie-poster" src="https://image.tmdb.org/t/p/w185{{movie.backdrop_path}}" alt="No preview">
           <img *ngIf="!movie.backdrop_path" class="card-img-top movie-poster" src="assets/default.png" alt="Default">
           <div class="card-body">

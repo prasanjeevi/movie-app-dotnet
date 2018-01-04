@@ -11,6 +11,7 @@ export class MoviesComponent implements OnInit {
 
   @Input() movies: Movie[];
   @Input() section: string;
+  @Output() notifyToggleRecommend: EventEmitter<Movie> = new EventEmitter<Movie>();
   i = 0;
 
   constructor(private movieService: MovieService) {}
@@ -44,6 +45,18 @@ export class MoviesComponent implements OnInit {
       this.movies = this.movies.filter(m => m !== movie);
     }
     this.movieService.toggleRecommend(movie).subscribe();
+    console.log('toggle from ' + this.section )
+    this.notifyToggleRecommend.emit(movie);
+  }
+
+  refreshRecommend(movie: Movie): void {
+    if (this.section === 'recommended') {
+      if (movie.recommended) {
+        this.movies.push(movie);
+      } else {
+        this.movies = this.movies.filter(m => m !== movie);
+      }
+    }
   }
 
   getTitle(): string {
