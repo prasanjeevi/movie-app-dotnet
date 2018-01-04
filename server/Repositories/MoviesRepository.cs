@@ -30,7 +30,7 @@ namespace server.Repositories
 
         public Movie GetMovie()
         {
-            var lastMovie = dbContext.Movies.LastOrDefault();
+            var lastMovie = dbContext.Movies.OrderByDescending(m => m.CreatedUtc).FirstOrDefault();
             if(lastMovie != null)
             {
                 lastMovie.IsRecommended = true;

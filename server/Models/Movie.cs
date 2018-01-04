@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
@@ -24,5 +25,9 @@ namespace server.Models
         [NotMapped]
         [JsonProperty("recommended")]
         public bool IsRecommended { get; set; }
+
+        [JsonIgnore]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime CreatedUtc { get; set; }
     }
 }

@@ -110,11 +110,19 @@ namespace server.Controllers
             try
             {
                 var client = new HttpClient();
-                string latestInterestMovieId = repository.GetMovie().ToString();
-                var request = client.GetStringAsync(appSettings.GetRecommendedMoviesUrl.Replace("{id}", latestInterestMovieId));
-                var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
-                ApplyRecommendation(response.Movies);
-                return Ok(response.Movies);
+                var latestInterest = repository.GetMovie();
+                if (latestInterest != null)
+                {
+                    var request = client.GetStringAsync(appSettings.GetRecommendedMoviesUrl.Replace("{id}", latestInterest.Id.ToString()));
+                    var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
+                    ApplyRecommendation(response.Movies);
+                    return Ok(response.Movies);
+                }
+                else
+                {
+                    // No interests found
+                    return Ok(new List<Movie>());
+                }
             }
             catch(Exception ex)
             {
