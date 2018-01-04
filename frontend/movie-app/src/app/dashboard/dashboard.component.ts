@@ -8,23 +8,23 @@ import { MoviesComponent } from 'app/movies/movies.component';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  constructor() { }
-
   @ViewChildren(MoviesComponent) child: QueryList<MoviesComponent>;
+
+  constructor() { }
 
   ngOnInit() {
   }
 
   onNotifyToggleRecommend(movie: Movie): void {
-    this.child.find(c => c.section == 'recommended').refreshRecommend(movie);
+    this.child.find(c => c.section === 'recommended').refreshRecommend(movie);
     this.updateOthers('trending', movie);
     this.updateOthers('upcoming', movie);
   }
 
   updateOthers(section: String, movie: Movie) {
-    var index = this.child.find(c => c.section == section).movies.findIndex(m => m.id == movie.id);
-    if (index != -1) {
-      this.child.find(c => c.section == section).movies[index] = movie;
+    const index = this.child.find(c => c.section === section).movies.findIndex(m => m.id === movie.id);
+    if (index !== -1) {
+      this.child.find(c => c.section === section).movies[index] = movie;
     }
   }
 }
