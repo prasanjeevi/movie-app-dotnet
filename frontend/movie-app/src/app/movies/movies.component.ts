@@ -11,7 +11,6 @@ export class MoviesComponent implements OnInit {
 
   @Input() movies: Movie[];
   @Input() section: string;
-  @Input() selectedMovieId: number;
   i = 0;
 
   constructor(private movieService: MovieService) {}
@@ -33,7 +32,7 @@ export class MoviesComponent implements OnInit {
           this.movies = movie as Movie[]
       });
     } else if (this.section === 'recommendations') {
-      this.movieService.getRecommendationsMovies(this.selectedMovieId).subscribe(
+      this.movieService.getRecommendationsMovies().subscribe(
         movie => {
           this.movies = movie as Movie[]
       });
