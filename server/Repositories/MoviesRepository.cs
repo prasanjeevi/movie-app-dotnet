@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace server.Repositories
 {
-    public class MoviesRepository
+    public class MoviesRepository : IMoviesRepository
     {
         private readonly ApplicationDbContext dbContext;
 
@@ -26,6 +26,16 @@ namespace server.Repositories
         {
             dbContext.Movies.ToList().ForEach(m => m.IsRecommended = true);
             return dbContext.Movies;
+        }
+
+        public Movie GetMovie()
+        {
+            var lastMovie = dbContext.Movies.LastOrDefault();
+            if(lastMovie != null)
+            {
+                lastMovie.IsRecommended = true;
+            }
+            return lastMovie;
         }
 
         // DELETE

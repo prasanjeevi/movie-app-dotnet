@@ -17,12 +17,12 @@ namespace server.Controllers
     public class MoviesController : Controller
     {
         private readonly AppSettings appSettings;
-        private readonly MoviesRepository repository;
+        private readonly IMoviesRepository repository;
        
-        public MoviesController(IOptions<AppSettings> appSettings, ApplicationDbContext dbContext)
+        public MoviesController(IOptions<AppSettings> appSettings, IMoviesRepository repository)
         {
             this.appSettings = appSettings.Value;
-            repository = new MoviesRepository(dbContext);
+            this.repository = repository;
         }
 
         // GET api/movies/trending
@@ -103,14 +103,15 @@ namespace server.Controllers
             }
         }
 
-        // GET api/movies/recommendations/{id}
-        [Route("recommendations/{id}")]
-        public IActionResult GetRecommendedMovies(string id)
+        // GET api/movies/recommendations
+        [Route("recommendations")]
+        public IActionResult GetRecommendedMovies()
         {
             try
             {
                 var client = new HttpClient();
-                var request = client.GetStringAsync(appSettings.GetRecommendedMoviesUrl.Replace("{id}", id));
+                string latestInterestMovieId = repository.GetMovie().ToString();
+                var request = client.GetStringAsync(appSettings.GetRecommendedMoviesUrl.Replace("{id}", latestInterestMovieId));
                 var response = JsonConvert.DeserializeObject<MovieApiResponse>(request.Result);
                 ApplyRecommendation(response.Movies);
                 return Ok(response.Movies);
