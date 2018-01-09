@@ -16,9 +16,9 @@ export class DashboardComponent implements OnInit {
   }
 
   onNotifyToggleRecommend(movie: Movie): void {
-    this.child.find(c => c.section === 'recommended').refreshRecommend(movie);
     this.updateOthers('trending', movie);
     this.updateOthers('upcoming', movie);
+    this.child.find(c => c.section === 'recommendations').ngOnInit();
   }
 
   updateOthers(section: String, movie: Movie) {

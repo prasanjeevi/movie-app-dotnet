@@ -13,30 +13,31 @@ export class MoviesComponent implements OnInit {
   @Input() section: string;
   @Output() notifyToggleRecommend: EventEmitter<Movie> = new EventEmitter<Movie>();
   i = 0;
+  error = '';
 
   constructor(private movieService: MovieService) {}
 
   ngOnInit() {
     if (this.section === 'trending') {
       this.movieService.getTrendingMovies().subscribe(
-        movie => {
-          this.movies = movie as Movie[]
-        });
+        movie => this.movies = movie as Movie[],
+        error => this.error = error
+      );
     } else if (this.section === 'upcoming') {
       this.movieService.getUpcomingMovies().subscribe(
-        movie => {
-          this.movies = movie as Movie[]
-        });
+        movie => this.movies = movie as Movie[],
+        error => this.error = error
+      );
     } else if (this.section === 'recommended') {
       this.movieService.getRecommendedMovies().subscribe(
-        movie => {
-          this.movies = movie as Movie[]
-      });
+        movie => this.movies = movie as Movie[],
+        error => this.error = error
+      );
     } else if (this.section === 'recommendations') {
       this.movieService.getRecommendationsMovies().subscribe(
-        movie => {
-          this.movies = movie as Movie[]
-      });
+        movie => this.movies = movie as Movie[],
+        error => this.error = error
+      );
     }
   }
 
@@ -44,9 +45,10 @@ export class MoviesComponent implements OnInit {
     if (this.section === 'recommended') {
       this.movies = this.movies.filter(m => m !== movie);
     }
-    this.movieService.toggleRecommend(movie).subscribe();
-    console.log('toggle from ' + this.section )
-    this.notifyToggleRecommend.emit(movie);
+    this.movieService.toggleRecommend(movie).subscribe(
+      _ => this.notifyToggleRecommend.emit(movie),
+      error => this.error = error
+    );
   }
 
   refreshRecommend(movie: Movie): void {
@@ -60,7 +62,7 @@ export class MoviesComponent implements OnInit {
   }
 
   getTitle(): string {
-    if (!this.section) {
+    if (this.section === 'search') {
       return 'Search Results';
     } else {
       return this.section + ' Movies';

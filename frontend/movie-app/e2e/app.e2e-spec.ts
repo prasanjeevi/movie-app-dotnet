@@ -1,5 +1,5 @@
 import { MovieAppPage } from './app.po';
-import { ExpectedConditions as EC } from 'protractor';
+import { ExpectedConditions as EC, by } from 'protractor';
 
 describe('movie-app App', () => {
   let page: MovieAppPage;
@@ -26,7 +26,7 @@ describe('movie-app App', () => {
 
   it('should have recommendations section', () => {
     page.navigateTo();
-    expect(page.getRecommendationsSectionText()).toEqual('Recommended Movies');
+    expect(page.getRecommendationsSectionText()).toEqual('Recommendations Movies');
   });
 
   it('should have movies in trending section', () => {
@@ -44,5 +44,27 @@ describe('movie-app App', () => {
     const hasMovies = () => page.getRecommendationsSectionMovies().length > 1;
     const hasNoMoviesMessage = () => page.getRecommendationsSectionNoMoviesMessage() !== undefined;
     EC.or(hasMovies, hasNoMoviesMessage);
+  });
+
+  it('when recommend/unrecommend toggle button is clicked it should change its state', () => {
+    page.navigateTo();
+    const firstToggleButton = page.getFirstRecommendOrUnrecommendButton();
+    const stateBeforeClick = page.getFirstRecommendOrUnrecommendButtonState();
+
+    stateBeforeClick.getAttribute('class').then((classes) => {
+        if (classes.indexOf(' recommend') !== -1) {
+            console.log('recommend to unrecommend')
+            firstToggleButton.click();
+            page.getFirstRecommendOrUnrecommendButtonState().getAttribute('class').then((classesAfterClick) => {
+                expect(classesAfterClick.indexOf(' unrecommend') !== -1).toBeTruthy();
+            })
+        } else if (classes.indexOf(' unrecommend') !== -1) {
+          console.log('unrecommend to recommend')
+          firstToggleButton.click();
+          page.getFirstRecommendOrUnrecommendButtonState().getAttribute('class').then((classesAfterClick) => {
+              expect(classesAfterClick.indexOf(' recommend') !== -1).toBeTruthy();
+          })
+        }
+    });
   });
 });

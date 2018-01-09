@@ -3,7 +3,10 @@
       <h3>{{getTitle() | capitalize}}</h3>
   </div>
   <div class="card-body">
-    <p *ngIf="!movies">Loading...</p>
+    <p *ngIf="!movies && error==''">Loading...</p>
+    <div class="alert alert-warning" *ngIf="error">
+      {{error}}
+    </div>
     <p *ngIf="movies && movies.length==0" id="no-movies">No movies found</p>
     <div class="row">
       <div class="prev"> 

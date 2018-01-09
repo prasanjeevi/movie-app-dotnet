@@ -36,4 +36,17 @@ export class MovieAppPage {
   getRecommendationsSectionNoMoviesMessage() {
     return $('#recommendations p#no-movies');
   }
+
+  getFirstRecommendOrUnrecommendButton() {
+    // First toggle button
+    browser.sleep(6000);
+    // more than one btn will be there, taking first element
+    return element(by.css('.movie-card .btn'))
+  }
+
+  getFirstRecommendOrUnrecommendButtonState() {
+    // First toggle buttons state
+    // more than one btn>i will be there, taking first element
+    return element(by.css('.movie-card .btn i'))
+  }
 }
