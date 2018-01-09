@@ -5,6 +5,7 @@ import { of } from 'rxjs/observable/of';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MovieApiResponse } from 'app/movie.api.response';
+import { environment } from '../environments/environment'
 
 @Injectable()
 export class MovieService {
@@ -17,12 +18,12 @@ export class MovieService {
     }
 
     if (searchBy === 'Movie') {
-      return this.http.get<Movie[]>(`http://localhost:5000/api/movies/search?query=${term}`).pipe(
+      return this.http.get<Movie[]>(`${environment.serviceUrls.searchByMovie}${term}`).pipe(
         tap(_ => console.log(`found movies matching "${term}"`)),
         catchError(this.handleError<Movie[]>('searchMovies', []))
       );
     } else if (searchBy === 'Director') {
-      return this.http.get<Movie[]>(`http://localhost:5000/api/movies/search/director/?query=${term}`).pipe(
+      return this.http.get<Movie[]>(`${environment.serviceUrls.searchByDirector}${term}`).pipe(
         tap(_ => console.log(`found movies matching "${term}"`)),
         catchError(this.handleError<Movie[]>('searchMoviesByDirector', []))
       );
@@ -30,28 +31,28 @@ export class MovieService {
   }
 
   getTrendingMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>('http://localhost:5000/api/movies/trending').pipe(
+    return this.http.get<Movie[]>(environment.serviceUrls.trending).pipe(
       tap(_ => console.log('retrived trending movies')),
       catchError(this.handleError<Movie[]>('getTrendingMovies', []))
     );
   }
 
   getUpcomingMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>('http://localhost:5000/api/movies/upcoming').pipe(
+    return this.http.get<Movie[]>(environment.serviceUrls.upcoming).pipe(
       tap(_ => console.log('retrived upcoming movies')),
       catchError(this.handleError<Movie[]>('getUpcomingMovies', []))
     );
   }
 
   getRecommendedMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>('http://localhost:5000/api/movies/recommended').pipe(
+    return this.http.get<Movie[]>(environment.serviceUrls.recommended).pipe(
       tap(_ => console.log('retrived my recommended movies')),
       catchError(this.handleError<Movie[]>('getRecommendedMovies', []))
     );
   }
 
   getRecommendationsMovies(): Observable<Movie[]> {
-    return this.http.get<Movie[]>('http://localhost:5000/api/movies/recommendations').pipe(
+    return this.http.get<Movie[]>(environment.serviceUrls.recommendations).pipe(
       tap(_ => console.log('retrived recommendations movies')),
       catchError(this.handleError<Movie[]>('getRecommendationsMovies', []))
     );
@@ -60,13 +61,13 @@ export class MovieService {
   toggleRecommend(movie: Movie): Observable<any> {
     if (!movie.recommended) {
       movie.recommended = true;
-      return this.http.post('http://localhost:5000/api/movies/recommend', movie, {responseType: 'text'}).pipe(
+      return this.http.post(environment.serviceUrls.recommend, movie, {responseType: 'text'}).pipe(
         tap(_ => console.log('recommend successfuly')),
         catchError(this.handleError<Movie>('toggleRecommend post'))
       );
     } else {
       movie.recommended = false;
-      return this.http.delete(`http://localhost:5000/api/movies/unrecommend/${movie.id}`, {responseType: 'text'}).pipe(
+      return this.http.delete(`${environment.serviceUrls.unrecommend}/${movie.id}`, {responseType: 'text'}).pipe(
         tap(_ => console.log('unrecommend successfuly')),
         catchError(this.handleError<Movie>('toggleRecommend del'))
       );
